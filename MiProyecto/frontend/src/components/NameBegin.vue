@@ -21,3 +21,12 @@ function startGame() {
         </form>
         <HomePage v-if="showHomePage" :playerName="playerName"/>
 </template>
+
+<style scoped>
+body {
+    font-family: Arial, sans-serif;
+    background-color: blue;
+    margin: 0;
+    padding: 20px;
+}
+</style>

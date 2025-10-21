@@ -15,3 +15,9 @@ defineProps({
         <h1>Welcome to the HomePage, {{ playerName }}!</h1>
     </div>
 </template>
+
+<style scoped>
+* {
+    background-color: blue;
+}
+</style>

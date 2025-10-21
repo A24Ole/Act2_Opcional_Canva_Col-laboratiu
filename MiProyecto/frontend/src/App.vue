@@ -1,10 +1,11 @@
 <script setup>
-import { ref, computed} from 'vue';
 
 import NameBegin from './components/NameBegin.vue'; 
+import GameChat from './components/GameChat.vue';
 </script>
 
 <template>
+  <GameChat />
   <NameBegin />
 </template>
 

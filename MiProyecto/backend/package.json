@@ -1,0 +1,14 @@
+{
+  "name": "mi-proyecto-backend",
+  "version": "0.0.1",
+  "description": "Conexión backend para MiProyecto",
+  "main": "server.js",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
