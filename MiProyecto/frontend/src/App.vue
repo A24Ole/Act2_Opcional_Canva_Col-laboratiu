@@ -1,17 +1,11 @@
 <script setup>
 import { ref, computed} from 'vue';
+
+import NameBegin from './components/NameBegin.vue'; 
 </script>
 
 <template>
-  <header>
-    <h1>Mi Aplicación Vue</h1>
-  </header>
-  <main>
-    <p>¡Bienvenido a mi aplicación Vue!</p>
-  </main>
-  <footer>
-    <p>&copy; 2023 Mi Aplicación Vue</p>
-  </footer>
+  <NameBegin />
 </template>
 
 <style scoped>
