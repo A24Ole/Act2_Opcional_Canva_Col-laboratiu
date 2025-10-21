@@ -1,8 +1,7 @@
-// src/communicationManager.js
-
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:3000"); // reemplaza por tu URL
+const socket = io("http://localhost:3000"); 
+
 
 
 
@@ -16,4 +15,5 @@ export const communicationManager = {
   disconnect() {
     socket.disconnect();
   }
+
 };

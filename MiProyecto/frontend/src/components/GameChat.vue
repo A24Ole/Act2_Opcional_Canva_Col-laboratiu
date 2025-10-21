@@ -2,10 +2,23 @@
 import { ref, onMounted } from "vue";
 import { communicationManager } from "../services/communicationManager";
 
+const message = ref("");
+
+const sendMessage = () => {
+    if (message.value.trim()) {
+        communicationManager.emit("chat message",message.value);
+        message.value = "";
+    }
+};
+
 onMounted(() => {
     // Evento "user connected" del servidor
     communicationManager.on("user conected", (msg) => {
         console.log(msg);
+    });
+    // Funcionalidad para enviar mensajes
+    communicationManager.on("chat message", (msg) => {
+        console.log("Usuario:", msg);
     });
     // Evento "user disconnected" del servidor
     communicationManager.on("user disconnected", (msg) => {
@@ -18,9 +31,10 @@ onMounted(() => {
 
 <template>
     <ul id="messages"></ul>
-    <form id="form" action="">
-        <input id="input" autocomplete="off" /><button>Send</button>
-    </form>
+    <form id="form" @submit.prevent="sendMessage">
+        <input id="input" v-model="message" placeholder="Escribe tu mensaje..." />
+    <button type="submit">Enviar</button>
+  </form>
 </template>
 
 <style scoped>
@@ -37,7 +51,6 @@ onMounted(() => {
         height: 3rem;
         box-sizing: border-box;
         backdrop-filter: blur(10px);
-        /* left: 0;  <-- Elimina esta línea */
     }
     #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
     #input:focus { outline: none; }
