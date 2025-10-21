@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["../MiProyecto/frontend/public/src/*
+    }
+  },
+  "exclude": ["../MiProyecto/frontend/node_modules", "../MiProyecto/frontend/dist"]
+}
