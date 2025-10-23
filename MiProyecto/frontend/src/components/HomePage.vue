@@ -8,30 +8,19 @@ defineProps({
   }
 });
 
-// --- ¡NUEVO! ---
-// Define los eventos que este componente puede "emitir" hacia su padre
 const emit = defineEmits(['joinRoom', 'createRoom']);
 
-// Variable reactiva para guardar el ID de la sala que el usuario escribe
 const roomId = ref('');
 
-// --- ¡NUEVO! ---
-// Función para unirse a una sala
 function handleJoinRoom() {
   if (roomId.value.trim()) {
-    // Emite el evento 'joinRoom' con el ID de la sala
     emit('joinRoom', roomId.value.trim());
   } else {
     alert('Por favor, ingresa un ID de sala para unirte.');
   }
 }
 
-// --- ¡NUEVO! ---
-// Función para crear una sala
 function handleCreateRoom() {
-  // Emite el evento 'createRoom'. El padre se encargará de la lógica.
-  // Podrías pasar roomId.value si quisieras crear una sala con nombre,
-  // pero un "create" simple es más común.
   emit('createRoom');
 }
 

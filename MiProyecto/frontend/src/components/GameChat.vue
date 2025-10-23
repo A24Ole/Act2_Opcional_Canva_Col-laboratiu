@@ -14,7 +14,7 @@ const props = defineProps({
 });
 
 const message = ref("");
-const messages = ref([]); // reactive array for messages
+const messages = ref([]); 
 
 const sendMessage = () => {
   if (message.value.trim()) {
