@@ -22,7 +22,13 @@ const sendMessage = () => {
       sender: props.playerName,
       text: message.value
     };
+    // Añade el mensaje localmente para que se muestre al instante
+    messages.value.push(chatMessage);
+    
+    // Envía el mensaje al servidor
     communicationManager.emit("chat message", chatMessage);
+    
+    // Limpia el input
     message.value = "";
   }
 };

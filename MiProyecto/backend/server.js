@@ -56,9 +56,9 @@ io.on('connection', (socket) => {
   });
 
   socket.on('chat message', (msg) => {
-    const room = Object.keys(socket.rooms).find(r => r !== socket.id);
+    const room = [...socket.rooms].find(r => r !== socket.id);
     if (room) {
-        io.to(room).emit('chat message', msg);
+        socket.to(room).emit('chat message', msg);
     }
   });
 
