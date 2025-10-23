@@ -12,6 +12,7 @@ import PlayerList from './components/PlayerList.vue';
 <template>
   <div id="app">
     <GameChat />
+    <PlayerList />
     <Canva />
   </div>
 </template>
