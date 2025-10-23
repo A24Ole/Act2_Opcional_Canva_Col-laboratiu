@@ -1,47 +1,51 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, defineProps } from "vue";
 import { communicationManager } from "../services/communicationManager";
+
+const props = defineProps({
+  playerName: {
+    type: String,
+    required: true
+  },
+  roomCode: {
+    type: String,
+    required: true
+  }
+});
 
 const message = ref("");
 const messages = ref([]); // reactive array for messages
 
 const sendMessage = () => {
   if (message.value.trim()) {
-    communicationManager.emit("chat message", message.value);
+    const chatMessage = {
+      sender: props.playerName,
+      text: message.value
+    };
+    communicationManager.emit("chat message", chatMessage);
     message.value = "";
   }
-};
-
-const handleUserConnected = (msg) => {
-  console.log(msg);
 };
 
 const handleChatMessage = (msg) => {
   messages.value.push(msg);
 };
 
-const handleUserDisconnected = (id) => {
-  console.log(`User disconnected: ${id}`);
-};
-
 onMounted(() => {
-  communicationManager.on("user connected", handleUserConnected); // fixed typo
   communicationManager.on("chat message", handleChatMessage);
-  communicationManager.on("user disconnected", handleUserDisconnected);
 });
 
 onUnmounted(() => {
-  // Clean up listeners to avoid duplicates if the component unmounts/mounts
-  communicationManager.off("user connected", handleUserConnected);
   communicationManager.off("chat message", handleChatMessage);
-  communicationManager.off("user disconnected", handleUserDisconnected);
 });
 </script>
 
 <template>
   <div class="chat-container">
     <ul id="messages">
-      <li v-for="(msg, index) in messages" :key="index">{{ msg }}</li>
+      <li v-for="(msg, index) in messages" :key="index">
+        <strong>{{ msg.sender }}:</strong> {{ msg.text }}
+      </li>
     </ul>
     <form id="form" @submit.prevent="sendMessage">
       <input id="input" v-model="message" placeholder="Escribe tu mensaje..." />
@@ -50,100 +54,77 @@ onUnmounted(() => {
   </div>
 </template>
 
-
 <style scoped>
-
-/* ------------------------------------------- */
-/* 1. CONTENEDOR PRINCIPAL (BASE OSCURA)        */
-/* ------------------------------------------- */
 .chat-container {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width: 400px;
-    max-width: 90%;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    max-height: 100%;
-    /* Fondo principal del chat container */
-    background: #1e1e1e; /* Fondo oscuro */
-    color: #f0f0f0; /* Color de texto claro por defecto */
-    box-shadow: -4px 0 10px rgba(0, 0, 0, 0.5); /* Sombra para destacarlo */
+  display: flex;
+  flex-direction: column;
+  background-color: #2f343d;
+  border: 1px solid #61dafb;
+  border-radius: 8px;
+  padding: 15px;
+  width: 350px; /* Ancho fijo para el chat */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  font-family: Arial, sans-serif;
+  color: white;
 }
 
-/* ------------------------------------------- */
-/* 2. BARRA DE ENTRADA (FORMULARIO)            */
-/* ------------------------------------------- */
-#form {
-    /* Mantenemos el efecto de transparencia, pero con un color más oscuro */
-    background: rgba(0, 0, 0, 0.4);
-    padding: 0.25rem;
-    display: flex;
-    height: 3rem;
-    box-sizing: border-box;
-    backdrop-filter: blur(10px);
-    flex-shrink: 0;
-    width: 100%;
-    /* Añadimos un borde superior sutil */
-    border-top: 1px solid #333;
-}
-#input {
-    border: none;
-    padding: 0 1rem;
-    flex-grow: 1;
-    border-radius: 2rem;
-    margin: 0.25rem;
-    /* Colores del input en modo oscuro */
-    background: #333; /* Fondo oscuro del input */
-    color: #f0f0f0; /* Texto del input claro */
-}
-#input::placeholder {
-    color: #aaa; /* Color del placeholder */
-}
-#input:focus { outline: none; }
-
-#form > button {
-    /* Color de fondo para el botón (ej. un azul/morado oscuro) */
-    background: #5a57a5;
-    border: none;
-    padding: 0 1rem;
-    margin: 0.25rem;
-    border-radius: 3px;
-    outline: none;
-    color: #fff; /* Texto del botón blanco */
-    font-weight: bold;
-}
-
-/* ------------------------------------------- */
-/* 3. LISTA Y MENSAJES (UL Y LI)              */
-/* ------------------------------------------- */
 #messages {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow-y: auto;
-    flex-grow: 1;
-    padding-bottom: 0.5rem;
-    /* Barra de scroll oculta o estilizada (opcional) */
+  list-style-type: none;
+  margin: 0;
+  padding: 0 10px;
+  overflow-y: auto;
+  flex-grow: 1;
+  margin-bottom: 15px;
+  min-height: 0; /* Solución para el scroll en flexbox */
 }
 
 #messages > li {
-    padding: 0.5rem 1rem;
-    text-align: right; /* Mantenemos la alineación a la derecha */
+  padding: 8px 12px;
+  border-radius: 5px;
+  margin-bottom: 5px;
 }
 
-/* Fondo para mensajes "impares" (para contraste en el tema oscuro) */
 #messages > li:nth-child(odd) {
-    background: #252526; /* Un gris ligeramente más claro que el fondo principal */
+  background: #282c34; /* Fondo oscuro para mensajes impares */
 }
 
-/* ------------------------------------------- */
-/* 4. ESTILOS BODY (Para no afectar el resto)  */
-/* ------------------------------------------- */
-body {
-    margin: 0;
-    /* Eliminamos el padding si el chat ocupa toda la altura */
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+#messages strong {
+    color: #61dafb; /* Color acento para el nombre */
+}
+
+#form {
+  display: flex;
+  gap: 10px;
+}
+
+#input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #555;
+  background-color: #282c34;
+  color: white;
+  font-size: 1rem;
+  flex-grow: 1;
+}
+
+#input::placeholder {
+  color: #888;
+}
+
+#form > button {
+  background-color: #61dafb;
+  color: #282c34;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+#form > button:hover {
+  background-color: #21a1f1;
 }
 </style>
